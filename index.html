@@ -4,171 +4,191 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AGP.Plantshop</title>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <style>
     body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f8fff8; color: #333; }
     header { background: linear-gradient(90deg, #43a047, #66bb6a); color: white; padding: 20px; text-align: center; }
-    /* Navbar */
     nav { display: flex; justify-content: center; background: #388E3C; flex-wrap: wrap; position: relative; }
-    nav a { color: white; padding: 14px 20px; text-decoration: none; display: block; transition: 0.2s; }
+    nav a { color: white; padding: 14px 20px; text-decoration: none; display: block; }
     nav a:hover { background: #2E7D32; border-radius: 5px; }
     .menu-toggle { display: none; flex-direction: column; cursor: pointer; position: absolute; right: 20px; top: 10px; }
-    .menu-toggle div { width: 25px; height: 3px; background: white; margin: 4px 0; transition: 0.3s; }
+    .menu-toggle div { width: 25px; height: 3px; background: white; margin: 4px 0; }
     .nav-links { display: flex; }
     .nav-links.active { display: block; width: 100%; text-align: center; }
-    /* Container */
     .container { padding: 20px; }
-    /* Filters */
-    .filters { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
-    .filters input, .filters select { padding: 8px; border-radius: 5px; border: 1px solid #ccc; flex: 1; min-width: 140px; }
-    /* Product grid */
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-    .card { background: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 15px; text-align: center; transition: 0.3s; }
-    .card:hover { transform: translateY(-5px); box-shadow: 0 8px 12px rgba(0,0,0,0.2); }
-    .card img { width: 100%; height: auto; border-radius: 10px; object-fit: cover; }
+    .card { background: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 15px; text-align: center; }
+    .card img { width: 100%; border-radius: 10px; }
     .price { font-size: 18px; color: #4CAF50; margin: 10px 0; }
-    .quantity { margin: 10px 0; }
     .quantity input { width: 50px; text-align: center; }
-    button { background: #4CAF50; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; transition: 0.2s; }
+    button { background: #4CAF50; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; }
     button:hover { background: #2e7d32; }
-    /* Cart */
-    #cart { background: #fff; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 20px; margin-top: 30px; }
+    #cart { background: #fff; border-radius: 10px; padding: 20px; margin-top: 30px; }
     #cart ul { list-style: none; padding: 0; }
     #cart ul li { display: flex; justify-content: space-between; margin: 8px 0; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
     #cart ul li button { background: red; padding: 5px 10px; font-size: 12px; }
-    /* Contact Form */
-    #contact { background: #e8f5e9; padding: 30px; margin-top: 40px; border-radius: 10px; }
+    #orderForm input, #orderForm textarea, #orderForm select,
     #contact input, #contact textarea { width: 100%; padding: 10px; margin: 8px 0; border-radius: 5px; border: 1px solid #ccc; }
-    /* Newsletter */
-    #newsletter { background: #c8e6c9; padding: 30px; margin-top: 30px; text-align: center; border-radius: 10px; }
-    #newsletter input { padding: 10px; width: 250px; border-radius: 5px; border: 1px solid #ccc; max-width: 90%; }
     footer { background: #2E7D32; color: white; text-align: center; padding: 15px; margin-top: 20px; }
-    /* Floating WhatsApp */
-    .whatsapp-float { position: fixed; bottom: 20px; right: 20px; background: #25D366; color: white; border-radius: 50%; width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; font-size: 28px; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-    /* Responsive */
+    .whatsapp-float { position: fixed; bottom: 20px; right: 20px; background: #25D366; color: white; border-radius: 50%; width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; font-size: 28px; text-decoration: none; }
     @media (max-width: 768px) {
-      nav { flex-direction: column; align-items: flex-start; }
+      nav { flex-direction: column; }
       .menu-toggle { display: flex; }
       .nav-links { display: none; flex-direction: column; width: 100%; }
-      .nav-links a { padding: 10px; border-top: 1px solid rgba(255,255,255,0.2); width: 100%; }
-      .grid { grid-template-columns: 1fr; }
-      .filters { flex-direction: column; align-items: stretch; }
+      .nav-links a { border-top: 1px solid rgba(255,255,255,0.2); }
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>🌱 AGP.Plantshop</h1>
-    <p>Fresh Plants | Affordable Prices | Home Delivery</p>
-  </header>
+<header>
+  <h1>🌱 AGP.Plantshop</h1>
+  <p>Fresh Plants | Affordable Prices | Home Delivery</p>
+</header>
 
-  <nav>
-    <div class="menu-toggle" onclick="toggleMenu()">
-      <div></div><div></div><div></div>
-    </div>
-    <div class="nav-links">
-      <a href="#">Home</a>
-      <a href="#plants">Plants</a>
-      <a href="#tips">Tips</a>
-      <a href="#growth">Growth Guide</a>
-      <a href="#cart">Cart</a>
-      <a href="#contact">Contact</a>
-    </div>
-  </nav>
-
-  <!-- Plants -->
-  <div class="container" id="plants">
-    <h2>Available Plants</h2>
-    <div class="filters">
-      <input type="text" id="search" placeholder="Search plants...">
-      <select id="categoryFilter">
-        <option value="all">All Categories</option>
-        <option value="indoor">Indoor</option>
-        <option value="outdoor">Outdoor</option>
-        <option value="medicinal">Medicinal</option>
-        <option value="flowering">Flowering</option>
-      </select>
-    </div>
-    <div class="grid" id="plantGrid">
-      <!-- Existing Plants -->
-      <div class="card" data-category="indoor"><img src="https://picsum.photos/300/200?random=1"><h3>Money Plant</h3><p class="price">Rs. 350</p><div class="quantity"><label>Qty:</label><input type="number" id="qty1" value="1" min="1"></div><button onclick="addToCart('Money Plant',350,document.getElementById('qty1').value)">Add to Cart</button></div>
-      <div class="card" data-category="medicinal"><img src="https://picsum.photos/300/200?random=2"><h3>Aloe Vera</h3><p class="price">Rs. 250</p><div class="quantity"><label>Qty:</label><input type="number" id="qty2" value="1" min="1"></div><button onclick="addToCart('Aloe Vera',250,document.getElementById('qty2').value)">Add to Cart</button></div>
-      <div class="card" data-category="flowering"><img src="https://picsum.photos/300/200?random=3"><h3>Rose Plant</h3><p class="price">Rs. 500</p><div class="quantity"><label>Qty:</label><input type="number" id="qty3" value="1" min="1"></div><button onclick="addToCart('Rose Plant',500,document.getElementById('qty3').value)">Add to Cart</button></div>
-      <div class="card" data-category="outdoor"><img src="https://picsum.photos/300/200?random=4"><h3>Tulsi Plant</h3><p class="price">Rs. 200</p><div class="quantity"><label>Qty:</label><input type="number" id="qty4" value="1" min="1"></div><button onclick="addToCart('Tulsi Plant',200,document.getElementById('qty4').value)">Add to Cart</button></div>
-      <!-- New Plants -->
-      <div class="card" data-category="indoor"><img src="https://picsum.photos/300/200?random=5"><h3>Snake Plant</h3><p class="price">Rs. 400</p><div class="quantity"><label>Qty:</label><input type="number" id="qty5" value="1" min="1"></div><button onclick="addToCart('Snake Plant',400,document.getElementById('qty5').value)">Add to Cart</button></div>
-      <div class="card" data-category="flowering"><img src="https://picsum.photos/300/200?random=6"><h3>Sunflower</h3><p class="price">Rs. 300</p><div class="quantity"><label>Qty:</label><input type="number" id="qty6" value="1" min="1"></div><button onclick="addToCart('Sunflower',300,document.getElementById('qty6').value)">Add to Cart</button></div>
-      <div class="card" data-category="medicinal"><img src="https://picsum.photos/300/200?random=7"><h3>Neem Plant</h3><p class="price">Rs. 280</p><div class="quantity"><label>Qty:</label><input type="number" id="qty7" value="1" min="1"></div><button onclick="addToCart('Neem Plant',280,document.getElementById('qty7').value)">Add to Cart</button></div>
-    </div>
+<nav>
+  <div class="menu-toggle" onclick="toggleMenu()">
+    <div></div><div></div><div></div>
   </div>
-
-  <!-- Tips Section -->
-  <div class="container" id="tips">
-    <h2>🌿 Gardening Tips</h2>
-    <ul>
-      <li>Water your plants early in the morning.</li>
-      <li>Use organic compost for healthy growth.</li>
-      <li>Keep indoor plants near sunlight windows.</li>
-      <li>Prune dead leaves regularly.</li>
-    </ul>
+  <div class="nav-links">
+    <a href="#">Home</a>
+    <a href="#plants">Plants</a>
+    <a href="#cart">Cart</a>
+    <a href="#contact">Contact</a>
   </div>
+</nav>
 
-  <!-- Growth Guide -->
-  <div class="container" id="growth">
-    <h2>📘 Plant Growth Guide</h2>
-    <p>Different plants need different care. Here are some basics:</p>
-    <ul>
-      <li><strong>Indoor Plants:</strong> Low sunlight, water twice a week.</li>
-      <li><strong>Outdoor Plants:</strong> Need direct sunlight, water daily.</li>
-      <li><strong>Medicinal Plants:</strong> Avoid overwatering, use clay pots.</li>
-    </ul>
+<!-- Products -->
+<div class="container" id="plants">
+  <h2>Available Plants</h2>
+  <div class="grid" id="plantGrid">
+    <div class="card"><img src="https://picsum.photos/300/200?random=1"><h3>Money Plant</h3><p class="price">Rs. 350</p><div class="quantity"><input type="number" id="qty1" value="1" min="1"></div><button onclick="addToCart('Money Plant',350,document.getElementById('qty1').value)">Add to Cart</button></div>
+    <div class="card"><img src="https://picsum.photos/300/200?random=2"><h3>Aloe Vera</h3><p class="price">Rs. 250</p><div class="quantity"><input type="number" id="qty2" value="1" min="1"></div><button onclick="addToCart('Aloe Vera',250,document.getElementById('qty2').value)">Add to Cart</button></div>
+    <div class="card"><img src="https://picsum.photos/300/200?random=3"><h3>Rose Plant</h3><p class="price">Rs. 500</p><div class="quantity"><input type="number" id="qty3" value="1" min="1"></div><button onclick="addToCart('Rose Plant',500,document.getElementById('qty3').value)">Add to Cart</button></div>
   </div>
+</div>
 
-  <!-- Cart -->
-  <div class="container" id="cart">
-    <h2>🛒 Your Cart</h2>
-    <ul id="cartItems"></ul>
-    <h3>Total: Rs. <span id="total">0</span></h3>
-    <button onclick="checkout()">Checkout</button>
-  </div>
+<!-- Cart -->
+<div class="container" id="cart">
+  <h2>🛒 Your Cart</h2>
+  <ul id="cartItems"></ul>
+  <h3>Total: Rs. <span id="total">0</span></h3>
+  <button onclick="showOrderForm()">Checkout</button>
 
-  <!-- Contact Form -->
-  <div class="container" id="contact">
-    <h2>📩 Contact Us</h2>
-    <form>
-      <input type="text" placeholder="Your Name" required>
-      <input type="email" placeholder="Your Email" required>
-      <textarea rows="5" placeholder="Your Message" required></textarea>
-      <button type="submit">Send Message</button>
+  <div id="orderForm" style="display:none; margin-top:20px; background:#f1f8e9; padding:20px; border-radius:10px;">
+    <h3>📝 Place Your Order</h3>
+    <form onsubmit="submitOrder(event)">
+      <input type="text" id="custName" placeholder="Full Name" required>
+      <input type="tel" id="custPhone" placeholder="Phone Number" required>
+      <textarea id="custAddress" rows="3" placeholder="Delivery Address" required></textarea>
+      <select id="paymentMethod" required>
+        <option value="Cash on Delivery">Cash on Delivery</option>
+        <option value="Easypaisa">Easypaisa</option>
+        <option value="JazzCash">JazzCash</option>
+      </select><br><br>
+      <button type="submit">Confirm Order</button>
     </form>
   </div>
+</div>
 
-  <!-- Newsletter -->
-  <div class="container" id="newsletter">
-    <h2>🌿 Join Our Newsletter</h2>
-    <p>Get updates about new plants, offers, and gardening tips!</p>
-    <input type="email" placeholder="Enter your email">
-    <button>Subscribe</button>
-  </div>
+<!-- Contact Form -->
+<div class="container" id="contact">
+  <h2>📩 Contact Us</h2>
+  <form onsubmit="sendContact(event)">
+    <input type="text" id="contactName" placeholder="Your Name" required>
+    <input type="email" id="contactEmail" placeholder="Your Email" required>
+    <textarea id="contactMsg" rows="5" placeholder="Your Message" required></textarea>
+    <button type="submit">Send Message</button>
+  </form>
+</div>
 
-  <footer>
-    <p>&copy; 2025 AGP.Plantshop | All Rights Reserved</p>
-    <p>Email: <a href="mailto:asadazad4445@gmail.com" style="color:white;">asadazad4445@gmail.com</a></p>
-    <p>Phone: <a href="tel:+923034035700" style="color:white;">+92 303 4035700</a></p>
-  </footer>
+<footer>
+  <p>&copy; 2025 AGP.Plantshop | All Rights Reserved</p>
+</footer>
 
-  <!-- WhatsApp Button -->
-  <a href="https://wa.me/923034035700" class="whatsapp-float" target="_blank">💬</a>
+<a href="https://wa.me/923034035700" class="whatsapp-float" target="_blank">💬</a>
 
-  <script>
-    let cart = [];
-    function addToCart(product, price, qty){ qty=parseInt(qty); const item=cart.find(i=>i.product===product); if(item){item.quantity+=qty;} else{cart.push({product,price,quantity:qty});} renderCart();}
-    function renderCart(){const cartItems=document.getElementById("cartItems");const totalEl=document.getElementById("total");cartItems.innerHTML="";let total=0;cart.forEach((item,index)=>{total+=item.price*item.quantity;cartItems.innerHTML+=`<li>${item.product} (x${item.quantity}) <strong>Rs. ${item.price*item.quantity}</strong> <button onclick="removeItem(${index})">X</button></li>`;});totalEl.textContent=total;}
-    function removeItem(index){cart.splice(index,1);renderCart();}
-    function checkout(){if(cart.length===0){alert("Your cart is empty!");}else{alert("✅ Thank you for your order! We will contact you soon.");cart=[];renderCart();}}
-    document.getElementById("search").addEventListener("input",function(){const q=this.value.toLowerCase();document.querySelectorAll("#plantGrid .card").forEach(c=>{const n=c.querySelector("h3").textContent.toLowerCase();c.style.display=n.includes(q)?"block":"none";});});
-    document.getElementById("categoryFilter").addEventListener("change",function(){const v=this.value;document.querySelectorAll("#plantGrid .card").forEach(c=>{c.style.display=(v==="all"||c.dataset.category===v)?"block":"none";});});
-    function toggleMenu(){document.querySelector(".nav-links").classList.toggle("active");}
-  </script>
+<script>
+  // ✅ Init EmailJS
+  (function(){
+    emailjs.init("DFLVGqXsf9CaS7jaR");
+  })();
+
+  let cart = [];
+
+  function addToCart(product, price, qty) {
+    qty = parseInt(qty);
+    const item = cart.find(i => i.product === product);
+    if(item){ item.quantity += qty; } else { cart.push({product, price, quantity: qty}); }
+    renderCart();
+  }
+
+  function renderCart(){
+    const cartItems = document.getElementById("cartItems");
+    const totalEl = document.getElementById("total");
+    cartItems.innerHTML = "";
+    let total = 0;
+    cart.forEach((item,index)=>{
+      total += item.price*item.quantity;
+      cartItems.innerHTML += `<li>${item.product} (x${item.quantity}) - Rs. ${item.price*item.quantity} <button onclick="removeItem(${index})">X</button></li>`;
+    });
+    totalEl.textContent = total;
+  }
+
+  function removeItem(index){ cart.splice(index,1); renderCart(); }
+
+  function showOrderForm(){
+    if(cart.length===0){ alert("Your cart is empty!"); return; }
+    document.getElementById("orderForm").style.display = "block";
+  }
+
+  function submitOrder(e){
+    e.preventDefault();
+    const name = document.getElementById("custName").value;
+    const phone = document.getElementById("custPhone").value;
+    const address = document.getElementById("custAddress").value;
+    const payment = document.getElementById("paymentMethod").value;
+
+    let cartDetails = cart.map(item => `${item.product} (x${item.quantity}) - Rs. ${item.price*item.quantity}`).join("\n");
+    let totalAmount = cart.reduce((sum, item)=> sum + (item.price*item.quantity),0);
+
+    const templateParams = {
+      customer_name: name,
+      customer_phone: phone,
+      customer_address: address,
+      payment_method: payment,
+      order_items: cartDetails,
+      order_total: totalAmount
+    };
+
+    emailjs.send("service_2lx8kzm","template_us5zzfa",templateParams)
+      .then(res=>{
+        alert("✅ Thank you! Your order has been placed.");
+        cart=[]; renderCart();
+        document.getElementById("orderForm").style.display="none";
+        e.target.reset();
+      })
+      .catch(err=>{
+        alert("❌ Failed to send order. Try again later.");
+        console.error("EmailJS Error:", err);
+      });
+  }
+
+  function sendContact(e){
+    e.preventDefault();
+    const name=document.getElementById("contactName").value;
+    const email=document.getElementById("contactEmail").value;
+    const msg=document.getElementById("contactMsg").value;
+
+    const contactParams={contact_name:name, contact_email:email, contact_message:msg};
+
+    emailjs.send("service_ckrs1i9","template_auxlh3m",contactParams)
+      .then(()=>{ alert("📩 Message sent successfully!"); e.target.reset(); })
+      .catch(err=>{ alert("❌ Failed to send message."); console.error(err); });
+  }
+
+  function toggleMenu(){ document.querySelector(".nav-links").classList.toggle("active"); }
+</script>
+
 </body>
 </html>
