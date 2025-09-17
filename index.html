@@ -33,10 +33,9 @@
     #orderForm input, #orderForm textarea, #orderForm select { width: 100%; padding: 10px; margin: 8px 0; border-radius: 5px; border: 1px solid #ccc; }
     #contact { background: #e8f5e9; padding: 30px; margin-top: 40px; border-radius: 10px; }
     #contact input, #contact textarea { width: 100%; padding: 10px; margin: 8px 0; border-radius: 5px; border: 1px solid #ccc; }
-    #newsletter { background: #c8e6c9; padding: 30px; margin-top: 30px; text-align: center; border-radius: 10px; }
-    #newsletter input { padding: 10px; width: 250px; border-radius: 5px; border: 1px solid #ccc; max-width: 90%; }
     footer { background: #2E7D32; color: white; text-align: center; padding: 15px; margin-top: 20px; }
     .whatsapp-float { position: fixed; bottom: 20px; right: 20px; background: #25D366; color: white; border-radius: 50%; width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; font-size: 28px; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+    .payment-details { background: #f1f8e9; padding: 10px; border-radius: 5px; margin: 10px 0; display: none; }
     @media (max-width: 768px) {
       nav { flex-direction: column; align-items: flex-start; }
       .menu-toggle { display: flex; }
@@ -49,256 +48,237 @@
 </head>
 <body>
 
-  <header>
-    <h1>🌱 AGP Plant shop</h1>
-    <p>Fresh Plants | Affordable Prices | Home Delivery</p>
-  </header>
+<header>
+  <h1>🌱 AGP Plant shop</h1>
+  <p>Fresh Plants | Affordable Prices | Home Delivery</p>
+</header>
 
-  <nav>
-    <div class="menu-toggle" onclick="toggleMenu()">
-      <div></div><div></div><div></div>
-    </div>
-    <div class="nav-links">
-      <a href="#">Home</a>
-      <a href="#plants">Plants</a>
-      <a href="#cart">Cart</a>
-      <a href="#contact">Contact</a>
-    </div>
-  </nav>
+<nav>
+  <div class="menu-toggle" onclick="toggleMenu()">
+    <div></div><div></div><div></div>
+  </div>
+  <div class="nav-links">
+    <a href="#">Home</a>
+    <a href="#plants">Plants</a>
+    <a href="#cart">Cart</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
 
-  <!-- Plants -->
-  <div class="container" id="plants">
-    <h2>Available Plants</h2>
-    <div class="filters">
-      <input type="text" id="search" placeholder="Search plants...">
-      <select id="categoryFilter">
-        <option value="all">All Categories</option>
-        <option value="indoor">Indoor Plant</option>
-        <option value="outdoor">Outdoor Plant</option>
-        <option value="flowering">Flowering Bush</option>
-        <option value="Palm Collection">Palm Collection</option>
-        <option value="Vines">Vines</option>
-        <option value="Shadow tree">Shadow tree</option>
+<!-- Plants -->
+<div class="container" id="plants">
+  <h2>Available Plants</h2>
+  <div class="filters">
+    <input type="text" id="search" placeholder="Search plants...">
+    <select id="categoryFilter">
+      <option value="all">All Categories</option>
+      <option value="indoor">Indoor Plant</option>
+      <option value="outdoor">Outdoor Plant</option>
+      <option value="flowering">Flowering Bush</option>
+      <option value="Palm Collection">Palm Collection</option>
+      <option value="Vines">Vines</option>
+      <option value="Shadow tree">Shadow tree</option>
+    </select>
+  </div>
+
+  <div class="grid" id="plantGrid">
+    <div class="card" data-category="indoor">
+      <img src="Money plant.jpeg">
+      <h3>Money Plant</h3>
+      <p>18 inch pot, 5 foot height, 3 years age, Indoor plant</p>
+      <p class="price">Rs. 3,500</p>
+      <div class="quantity"><label>Qty:</label><input type="number" id="qty1" value="1" min="1"></div>
+      <button onclick="addToCart('p1','Money Plant',3500,document.getElementById('qty1').value)">Add to Cart</button>
+    </div>
+    <div class="card" data-category="Palm Collection, outdoor">
+      <img src="Ravinia palm.jpeg">
+      <h3>Ravina lovely</h3>
+      <p>24 inch pot, 5 foot height, 3 years, Outdoor plants</p>
+      <p class="price">Rs. 10,000</p>
+      <div class="quantity"><label>Qty:</label><input type="number" id="qty2" value="1" min="1"></div>
+      <button onclick="addToCart('p2','Ravina lovely',10000,document.getElementById('qty2').value)">Add to Cart</button>
+    </div>
+    <div class="card" data-category="Palm Collection, outdoor">
+      <img src="Bottle plam.jpeg">
+      <h3>Bottle palm</h3>
+      <p>18 to 24 inch pot, 10 to 15 foot height, 5 years age, Outdoor plants</p>
+      <p class="price">Rs. 12,000</p>
+      <div class="quantity"><label>Qty:</label><input type="number" id="qty3" value="1" min="1"></div>
+      <button onclick="addToCart('p3','Bottle palm',12000,document.getElementById('qty3').value)">Add to Cart</button>
+    </div>
+    <div class="card" data-category="Palm Collection, indoor">
+      <img src="Zz Plant.jpeg">
+      <h3>Zz Plant</h3>
+      <p>8 inch pot, 4 foot height, 2 year age, Indoor plants </p>
+      <p class="price">Rs. 4,500</p>
+      <div class="quantity"><label>Qty:</label><input type="number" id="qty5" value="1" min="1"></div>
+      <button onclick="addToCart('p5','Zz Plant',4500,document.getElementById('qty5').value)">Add to Cart</button>
+    </div>
+  </div>
+</div>
+
+<!-- Cart -->
+<div class="container" id="cart">
+  <h2>🛒 Your Cart</h2>
+  <ul id="cartItems"></ul>
+  <h3>Total: Rs. <span id="total">0</span></h3>
+  <button onclick="showOrderForm()">Checkout</button>
+
+  <div id="orderForm" style="display:none; margin-top:20px; background:#f1f8e9; padding:20px; border-radius:10px;">
+    <h3>📝 Place Your Order</h3>
+    <form onsubmit="submitOrder(event)">
+      <input type="text" id="custName" placeholder="Full Name" required>
+      <input type="email" id="custEmail" placeholder="Email Address" required>
+      <input type="tel" id="custPhone" placeholder="Phone Number" required>
+      <textarea id="custAddress" rows="3" placeholder="Delivery Address" required></textarea>
+
+      <label><strong>Payment Method:</strong></label>
+      <select id="paymentMethod" required onchange="showPaymentDetails()">
+        <option value="">Select Payment Method</option>
+        <option value="Easypaisa">Easypaisa</option>
+        <option value="JazzCash">JazzCash</option>
       </select>
-    </div>
 
-    <div class="grid" id="plantGrid">
+      <div id="paymentInfo" class="payment-details"></div>
 
-      <div class="card" data-category="indoor">
-        <img src="Money plant.jpeg">
-        <h3>Money Plant</h3>
-        <p>18 inch pot, 5 foot height, 3 years age, Indoor plant</p>
-        <p class="price">Rs. 3,500</p>
-        <div class="quantity">
-            <label>Qty:</label>
-            <input type="number" id="qty1" value="1" min="1">
-        </div>
-        <button onclick="addToCart('Money Plant',3500,document.getElementById('qty1').value)">Add to Cart</button>
-        </div>
+      <input type="text" id="senderName" placeholder="Sender Account Name" required>
+      <input type="text" id="senderNumber" placeholder="Sender Account Number" required>
+      <input type="text" id="transactionId" placeholder="Transaction ID" required>
 
-      <div class="card" data-category="Palm Collection">
-        <img src="Ravinia palm.jpeg">
-        <h3>Ravina lovely</h3>
-        <p>24 inch pot, 5 foot height, 3 years, Outdoor plants</p>
-        <p class="price">Rs. 10,000</p>
-        <div class="quantity">
-            <label>Qty:</label>
-            <input type="number" id="qty2" value="1" min="1">
-        </div>
-        <button onclick="addToCart('Ravina lovely',10000,document.getElementById('qty2').value)">Add to Cart</button>
-    </div>
-
-      <div class="card" data-category="Palm Collection">
-        <img src="Bottle plam.jpeg">
-        <h3>Bottle palm</h3>
-        <p>18 to 24 inch pot, 10 to 15 foot height, 5 years age, Outdoor plants</p>
-        <p class="price">Rs. 12,000</p>
-        <div class="quantity">
-            <label>Qty:</label>
-            <input type="number" id="qty3" value="1" min="1">
-        </div>
-        <button onclick="addToCart('Bottle palm',12000,document.getElementById('qty3').value)">Add to Cart</button>
-    </div>
-
-      <div class="card" data-category="Palm Collection">
-        <img src="Foxtail palm.jpeg">
-        <h3>Foxtail palm</h3>
-        <p>18 inh pot, 14 foot height, 5 year age, Outdoor plants </p>
-        <p class="price">Rs. 10,000</p>
-        <div class="quantity">
-            <label>Qty:</label>
-            <input type="number" id="qty3" value="1" min="1">
-        </div>
-        <button onclick="addToCart('Foxtail palm',10000,document.getElementById('qty3').value)">Add to Cart</button>
-    </div>
-
-      
-
-      
-
-      
-
-      
-
-    
-    </div>
-  </div>
-
-  <!-- Tips Section -->
-  <!-- <div class="container" id="tips">
-    <h2>🌿 Gardening Tips</h2>
-    <ul>
-      <li>Water your plants early in the morning.</li>
-      <li>Use organic compost for healthy growth.</li>
-      <li>Keep indoor plants near sunlight windows.</li>
-      <li>Prune dead leaves regularly.</li>
-    </ul>
-  </div> -->
-
-  <!-- Growth Guide -->
-  <!-- <div class="container" id="growth">
-    <h2>📘 Plant Growth Guide</h2>
-    <ul>
-      <li><strong>Indoor Plants:</strong> Low sunlight, water twice a week.</li>
-      <li><strong>Outdoor Plants:</strong> Need direct sunlight, water daily.</li>
-      <li><strong>Medicinal Plants:</strong> Avoid overwatering, use clay pots.</li>
-    </ul>
-  </div> -->
-
-  <!-- Cart -->
-  <div class="container" id="cart">
-    <h2>🛒 Your Cart</h2>
-    <ul id="cartItems"></ul>
-    <h3>Total: Rs. <span id="total">0</span></h3>
-    <button onclick="showOrderForm()">Checkout</button>
-
-    <div id="orderForm" style="display:none; margin-top:20px; background:#f1f8e9; padding:20px; border-radius:10px;">
-      <h3>📝 Place Your Order</h3>
-      <form onsubmit="submitOrder(event)">
-        <input type="text" id="custName" placeholder="Full Name" required>
-        <input type="email" id="custEmail" placeholder="Email Address" required>
-        <input type="tel" id="custPhone" placeholder="Phone Number" required>
-        <textarea id="custAddress" rows="3" placeholder="Delivery Address : Like (address, city, state)" required></textarea>
-        <label><strong>Payment Method:</strong></label><br>
-        <select id="paymentMethod" required>
-          <option value="Cash on Delivery">Cash on Delivery</option>
-          <option value="Easypaisa">Easypaisa</option>
-          <option value="JazzCash">JazzCash</option>
-        </select><br><br>
-        <button type="submit">Confirm Order</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Contact Form -->
-  <div class="container" id="contact">
-    <h2>📩 Contact Us</h2>
-    <form>
-      <input type="text" placeholder="Your Name" required>
-      <input type="email" placeholder="Your Email" required>
-      <textarea rows="5" placeholder="Your Message" required></textarea>
-      <button type="submit">Send Message</button>
+      <button type="submit">Confirm Order</button>
     </form>
   </div>
+</div>
 
-  <!-- Newsletter -->
-  <div class="container" id="newsletter">
-    <h2>🌿 Join Our Newsletter</h2>
-    <p>Get updates about new plants, offers, and gardening tips!</p>
-    <input type="email" placeholder="Enter your email">
-    <button>Subscribe</button>
-  </div>
+<!-- Contact Form -->
+<div class="container" id="contact">
+  <h2>📩 Contact Us</h2>
+  <form>
+    <input type="text" placeholder="Your Name" required>
+    <input type="email" placeholder="Your Email" required>
+    <textarea rows="5" placeholder="Your Message" required></textarea>
+    <button type="submit">Send Message</button>
+  </form>
+</div>
 
-  <footer>
-    <p>&copy; 2025 AGP.Plantshop | All Rights Reserved</p>
-    <p>Email: <a href="mailto:asadazad4445@gmail.com" style="color:white;">asadazad4445@gmail.com</a></p>
-    <p>Phone: <a href="tel:+923034035700" style="color:white;">+92 303 4035700</a></p>
-  </footer>
+<footer>
+  <p>&copy; 2025 AGP.Plantshop | All Rights Reserved</p>
+  <p>Email: <a href="mailto:asadazad4445@gmail.com" style="color:white;">asadazad4445@gmail.com</a></p>
+  <p>Phone: <a href="tel:+923034035700" style="color:white;">+92 303 4035700</a></p>
+</footer>
 
-  <a href="https://wa.me/923034035700" class="whatsapp-float" target="_blank">💬</a>
+<a href="https://wa.me/923034035700" class="whatsapp-float" target="_blank">💬</a>
 
-  <!-- EmailJS SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-  <script>
-    (function() {
-      emailjs.init("DFLVGqXsf9CaS7jaR"); // ✅ Your Public Key
-    })();
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+  emailjs.init("DFLVGqXsf9CaS7jaR"); // Your Public Key
 
-    let cart = [];
+  let cart = [];
 
-    function addToCart(product, price, qty){
-      qty = parseInt(qty);
-      const item = cart.find(i => i.product === product);
-      if(item){ item.quantity += qty; } 
-      else { cart.push({product, price, quantity: qty}); }
+  function addToCart(id,name,price,qty){
+    qty = parseInt(qty);
+    const item = cart.find(i => i.id === id);
+    if(item){ item.quantity += qty; } 
+    else { cart.push({id,name,price,quantity:qty}); }
+    renderCart();
+  }
+
+  function renderCart(){
+    const cartItems = document.getElementById("cartItems");
+    const totalEl = document.getElementById("total");
+    cartItems.innerHTML = "";
+    let total = 0;
+    cart.forEach((item,index)=>{
+      total += item.price*item.quantity;
+      cartItems.innerHTML += `<li>${item.name} (x${item.quantity}) <strong>Rs. ${item.price*item.quantity}</strong> <button onclick="removeItem(${index})">X</button></li>`;
+    });
+    totalEl.textContent = total;
+  }
+
+  function removeItem(index){ cart.splice(index,1); renderCart(); }
+  function showOrderForm(){ if(cart.length===0){ alert("Your cart is empty!"); return;} document.getElementById("orderForm").style.display="block"; }
+
+  function showPaymentDetails(){
+    const method = document.getElementById("paymentMethod").value;
+    const info = document.getElementById("paymentInfo");
+    if(method === "Easypaisa"){
+      info.innerHTML = "<strong>Easypaisa Account:</strong><br>03296915429 (Numan Khalid)";
+      info.style.display = "block";
+    } else if(method === "JazzCash"){
+      info.innerHTML = "<strong>JazzCash Account:</strong><br>03296915429 (Numan Khalid)";
+      info.style.display = "block";
+    } else { info.style.display = "none"; }
+  }
+
+  async function submitOrder(e){
+    e.preventDefault();
+    if(cart.length === 0){ alert("Cart is empty!"); return; }
+
+    const name = document.getElementById("custName").value;
+    const email = document.getElementById("custEmail").value;
+    const phone = document.getElementById("custPhone").value;
+    const address = document.getElementById("custAddress").value;
+    const payment = document.getElementById("paymentMethod").value;
+    const senderName = document.getElementById("senderName").value;
+    const senderNumber = document.getElementById("senderNumber").value;
+    const transactionId = document.getElementById("transactionId").value;
+
+    const orderItems = cart.map(i => `${i.name} (x${i.quantity}) - Rs. ${i.price*i.quantity}`).join("\n");
+    const orderTotal = cart.reduce((sum,i)=>sum + i.price*i.quantity,0);
+
+    const templateParams = {
+      customer_name: name,
+      customer_email: email,
+      customer_phone: phone,
+      customer_address: address,
+      payment_method: payment,
+      order_items: orderItems,
+      order_total: orderTotal,
+      sender_name: senderName,
+      sender_number: senderNumber,
+      transaction_id: transactionId
+    };
+
+    try{
+      await emailjs.send("service_2lx8kzm","template_us5zzfa",templateParams);
+      await emailjs.send("service_2lx8kzm","template_waj0js9",templateParams);
+      alert(`✅ Thank you ${name}! Your order has been placed. Confirmation sent to ${email}`);
+      cart = [];
       renderCart();
+      document.getElementById("orderForm").style.display="none";
+      e.target.reset();
+    } catch(err){
+      console.error("Email Error:", err);
+      alert("❌ Failed to send order. Try again later.");
     }
+  }
 
-    function renderCart(){
-      const cartItems = document.getElementById("cartItems");
-      const totalEl = document.getElementById("total");
-      cartItems.innerHTML = "";
-      let total = 0;
-      cart.forEach((item,index)=>{
-        total += item.price*item.quantity;
-        cartItems.innerHTML += `<li>${item.product} (x${item.quantity}) <strong>Rs. ${item.price*item.quantity}</strong> <button onclick="removeItem(${index})">X</button></li>`;
-      });
-      totalEl.textContent = total;
-    }
+  function toggleMenu(){document.querySelector(".nav-links").classList.toggle("active");}
 
-    function removeItem(index){ cart.splice(index,1); renderCart(); }
-    function showOrderForm(){ if(cart.length===0){ alert("Your cart is empty!"); return;} document.getElementById("orderForm").style.display="block"; }
+  // Search & Category Filter
+  const searchInput = document.getElementById("search");
+  const categorySelect = document.getElementById("categoryFilter");
+  const plantGrid = document.getElementById("plantGrid");
 
-    function submitOrder(e){
-      e.preventDefault();
+  function filterPlants() {
+    const searchText = searchInput.value.toLowerCase();
+    const category = categorySelect.value;
 
-      const name = document.getElementById("custName").value;
-      const email = document.getElementById("custEmail").value;
-      const phone = document.getElementById("custPhone").value;
-      const address = document.getElementById("custAddress").value;
-      const payment = document.getElementById("paymentMethod").value;
+    const cards = plantGrid.querySelectorAll(".card");
+    cards.forEach(card => {
+      const name = card.querySelector("h3").textContent.toLowerCase();
+      const cardCategories = card.dataset.category.toLowerCase();
+      const matchesSearch = name.includes(searchText);
+      const matchesCategory = category === "all" || cardCategories.includes(category.toLowerCase());
+      card.style.display = matchesSearch && matchesCategory ? "block" : "none";
+    });
+  }
 
-      let orderItems = cart.map(i => `${i.product} (x${i.quantity}) - Rs. ${i.price * i.quantity}`).join("\n");
-      let orderTotal = cart.reduce((sum,i)=>sum + i.price*i.quantity,0);
+  searchInput.addEventListener("input", filterPlants);
+  categorySelect.addEventListener("change", filterPlants);
 
-      // ✅ Send email to Shopowner
-      emailjs.send("service_2lx8kzm", "template_us5zzfa", {
-        customer_name: name,
-        customer_email: email,
-        customer_phone: phone,
-        customer_address: address,
-        payment_method: payment,
-        order_items: orderItems,
-        order_total: orderTotal
-      }).then(() => {
-        console.log("Shopowner email sent");
-      }).catch(err => console.error("Owner Email Error:", err));
+</script>
 
-      // ✅ Send email to Customer (Order Confirmation)
-      emailjs.send("service_2lx8kzm", "template_waj0js9", {
-        customer_name: name,
-        customer_email: email,
-        customer_phone: phone,
-        customer_address: address,
-        payment_method: payment,
-        order_items: orderItems,
-        order_total: orderTotal
-      }).then(() => {
-        alert(`✅ Thank you ${name}! Your order has been placed. Confirmation sent to ${email}`);
-        cart = [];
-        renderCart();
-        document.getElementById("orderForm").style.display = "none";
-        e.target.reset();
-      }).catch(err => {
-        console.error("Customer Email Error:", err);
-        alert("❌ Failed to send confirmation. Try again later.");
-      });
-    }
-
-    document.getElementById("search").addEventListener("input",function(){const q=this.value.toLowerCase();document.querySelectorAll("#plantGrid .card").forEach(c=>{const n=c.querySelector("h3").textContent.toLowerCase();c.style.display=n.includes(q)?"block":"none";});});
-    document.getElementById("categoryFilter").addEventListener("change",function(){const v=this.value;document.querySelectorAll("#plantGrid .card").forEach(c=>{c.style.display=(v==="all"||c.dataset.category===v)?"block":"none";});});
-    function toggleMenu(){document.querySelector(".nav-links").classList.toggle("active");}
-  </script>
 </body>
 </html>
-
